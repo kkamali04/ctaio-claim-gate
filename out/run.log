@@ -1,0 +1,10 @@
+[1/8] VERIFIED     https://www.anthropic.com/engineering/building-effective-agents  -- quote found in 20002 chars of page text
+[2/8] UNSUPPORTED  https://docs.anthropic.com/en/docs/claude-code/overview  -- page loaded (12441 chars) but quote absent
+[3/8] VERIFIED     https://arxiv.org/abs/2405.15793  -- quote found in 4974 chars of page text
+[4/8] VERIFIED     https://arxiv.org/abs/2308.07201  -- quote found in 4758 chars of page text
+[5/8] VERIFIED     https://simonwillison.net/2025/Sep/18/agents/  -- quote found in 7732 chars of page text
+[6/8] UNSUPPORTED  https://modelcontextprotocol.io/introduction  -- page loaded (3128 chars) but quote absent
+[7/8] UNSUPPORTED  https://docs.cursor.com/context/rules-for-ai  -- page loaded (5481 chars) but quote absent
+[8/8] DEAD         https://docs.anthropic.com/en/docs/build-with-claude/agents  -- HTTP 404 Not Found
+
+8 claims in | 4 verified | 3 unsupported | 1 dead (abstain)
