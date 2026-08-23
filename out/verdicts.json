@@ -11,7 +11,7 @@
     "claim": "Claude Code is an agentic coding tool that runs in the terminal and reads your codebase.",
     "quote": "Claude Code is an agentic coding tool that lives in your terminal, understands your codebase",
     "source_url": "https://docs.anthropic.com/en/docs/claude-code/overview",
-    "status": "UNSUPPORTED",
+    "status": "QUOTE_NOT_FOUND",
     "http_status": 200,
     "detail": "page loaded (12441 chars) but quote absent"
   },
@@ -43,7 +43,7 @@
     "claim": "MCP is an open protocol standardizing how applications supply context to LLMs.",
     "quote": "MCP is an open protocol that standardizes how applications provide context to large language models",
     "source_url": "https://modelcontextprotocol.io/introduction",
-    "status": "UNSUPPORTED",
+    "status": "QUOTE_NOT_FOUND",
     "http_status": 200,
     "detail": "page loaded (3128 chars) but quote absent"
   },
@@ -51,7 +51,7 @@
     "claim": "Cursor supports persistent, repo-checked-in rules that steer the model.",
     "quote": "Rules provide system-level instructions to Agent",
     "source_url": "https://docs.cursor.com/context/rules-for-ai",
-    "status": "UNSUPPORTED",
+    "status": "QUOTE_NOT_FOUND",
     "http_status": 200,
     "detail": "page loaded (5481 chars) but quote absent"
   },

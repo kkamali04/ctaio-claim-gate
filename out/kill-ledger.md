@@ -1,16 +1,16 @@
 # Kill ledger
 
-*Run 2026-08-23 07:53 UTC.* Every claim that did not make it into `post.md`, and why.
+*Run 2026-08-23 08:17 UTC.* Every claim that did not make it into `post.md`, and why.
 
 - **8** claims in
 - **4** VERIFIED (published)
-- **3** UNSUPPORTED (page loaded, quote absent — dropped as wrong)
+- **3** QUOTE_NOT_FOUND (page loaded, quote absent in the fetched bytes)
 - **1** DEAD (source unreachable — **abstained**, not judged)
 
 > A DEAD source is not evidence against the claim. The gate refuses to
 > score it. Missing evidence is not disproof; it is missing evidence.
 
-## UNSUPPORTED — the source did not say this
+## QUOTE_NOT_FOUND - the quote string was absent from what was fetched
 
 | claim | url | http | reason |
 |---|---|---|---|
@@ -18,7 +18,7 @@
 | MCP is an open protocol standardizing how applications supply context to LLMs. | https://modelcontextprotocol.io/introduction | 200 | page loaded (3128 chars) but quote absent |
 | Cursor supports persistent, repo-checked-in rules that steer the model. | https://docs.cursor.com/context/rules-for-ai | 200 | page loaded (5481 chars) but quote absent |
 
-## DEAD — abstained, source unreachable
+## DEAD - abstained, source unreachable
 
 | claim | url | http | failure |
 |---|---|---|---|

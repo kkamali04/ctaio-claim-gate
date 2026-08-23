@@ -7,11 +7,13 @@ to text, normalize whitespace, and ask whether `quote` literally appears.
 Three outcomes, and the distinction between the last two is the whole point:
 
     VERIFIED    page loaded, quote found.
-    UNSUPPORTED page loaded, quote absent. This is EVIDENCE AGAINST the claim.
-    DEAD        non-200, timeout, TLS error, DNS failure. We learned NOTHING.
+    QUOTE_NOT_FOUND page loaded, but the quote string was absent from the bytes
+                    fetched. That is a failure to find evidence, not a proof the
+                    claim is false.
+    DEAD            non-200, timeout, TLS error, DNS failure. Nothing was learned.
 
 A DEAD source ABSTAINS. Missing evidence is not disproof. Scoring a dead link
-the same as a contradicted quote silently converts "the internet rotted" into
+the same as a missing quote silently converts "the internet rotted" into
 "the author lied", and that error compounds every time the gate runs.
 
 Usage:
@@ -34,7 +36,7 @@ UA = (
 )
 
 VERIFIED = "VERIFIED"
-UNSUPPORTED = "UNSUPPORTED"
+QUOTE_NOT_FOUND = "QUOTE_NOT_FOUND"
 DEAD = "DEAD"
 
 _SCRIPT = re.compile(r"<(script|style|noscript)\b.*?</\1>", re.S | re.I)
@@ -73,7 +75,7 @@ def normalize(s: str) -> str:
     # `<strong>Agents</strong>, on the other hand` into `Agents , on the other
     # hand`. That phantom space is a single legal space between two tokens, so
     # whitespace collapsing cannot remove it, and the gate then reports
-    # UNSUPPORTED on a quote that is verbatim present -- the worst possible
+    # QUOTE_NOT_FOUND on a quote that is verbatim present -- the worst possible
     # failure for a tool whose whole job is telling true from false.
     s = _SPACE_BEFORE_PUNCT.sub(r"\1", s)
     s = _SPACE_AFTER_OPEN.sub(r"\1", s)
@@ -81,7 +83,7 @@ def normalize(s: str) -> str:
 
 
 def fetch(url: str):
-    """Return (text, status). Raises on anything that means 'we learned nothing'."""
+    """Return (text, status). Raises on anything that means nothing was learned."""
     req = urllib.request.Request(
         url,
         headers={
@@ -123,7 +125,7 @@ def check(claim: dict) -> dict:
     if normalize(claim["quote"]) in page:
         result.update(status=VERIFIED, detail=f"quote found in {len(page)} chars of page text")
     else:
-        result.update(status=UNSUPPORTED,
+        result.update(status=QUOTE_NOT_FOUND,
                       detail=f"page loaded ({len(page)} chars) but quote absent")
     return result
 
@@ -141,9 +143,9 @@ def main() -> int:
               file=sys.stderr)
 
     counts = {s: sum(1 for v in verdicts if v["status"] == s)
-              for s in (VERIFIED, UNSUPPORTED, DEAD)}
+              for s in (VERIFIED, QUOTE_NOT_FOUND, DEAD)}
     print(f"\n{len(claims)} claims in | {counts[VERIFIED]} verified | "
-          f"{counts[UNSUPPORTED]} unsupported | {counts[DEAD]} dead (abstain)",
+          f"{counts[QUOTE_NOT_FOUND]} quote_not_found | {counts[DEAD]} dead (abstain)",
           file=sys.stderr)
 
     json.dump(verdicts, sys.stdout, indent=2, ensure_ascii=False)

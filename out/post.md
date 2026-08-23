@@ -1,6 +1,6 @@
 # What agentic coding actually is
 
-*Published by claim-gate 2026-08-23 07:53 UTC. 4 of 8 drafted claims survived verification.*
+*Published by claim-gate 2026-08-23 08:17 UTC. 4 of 8 drafted claims survived verification.*
 
 - Anthropic defines agents as LLMs that dynamically direct their own processes and tool usage, as opposed to workflows orchestrated through predefined code paths.
   > "Agents, on the other hand, are systems where LLMs dynamically direct their own processes and tool usage, maintaining control over how they accomplish tasks."
@@ -19,4 +19,4 @@
   — [source](https://simonwillison.net/2025/Sep/18/agents/)
 
 ---
-3 claims were dropped as unsupported. 1 abstained on a dead source. See `kill-ledger.md`.
+3 claims were dropped because the quote was not found. 1 abstained on a dead source. See `kill-ledger.md`.

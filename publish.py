@@ -26,7 +26,7 @@ def main() -> int:
     stamp = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
 
     verified = [v for v in verdicts if v["status"] == "VERIFIED"]
-    unsupported = [v for v in verdicts if v["status"] == "UNSUPPORTED"]
+    quote_not_found = [v for v in verdicts if v["status"] == "QUOTE_NOT_FOUND"]
     dead = [v for v in verdicts if v["status"] == "DEAD"]
 
     post = [
@@ -45,7 +45,7 @@ def main() -> int:
         post.append("_No claim survived the gate. Nothing was published._")
         post.append("")
     post.append("---")
-    post.append(f"{len(unsupported)} claims were dropped as unsupported. "
+    post.append(f"{len(quote_not_found)} claims were dropped because the quote was not found. "
                 f"{len(dead)} abstained on a dead source. See `kill-ledger.md`.")
 
     with open(os.path.join(OUT, "post.md"), "w", encoding="utf-8") as fh:
@@ -58,26 +58,26 @@ def main() -> int:
         "",
         f"- **{len(verdicts)}** claims in",
         f"- **{len(verified)}** VERIFIED (published)",
-        f"- **{len(unsupported)}** UNSUPPORTED (page loaded, quote absent — dropped as wrong)",
+        f"- **{len(quote_not_found)}** QUOTE_NOT_FOUND (page loaded, quote absent in the fetched bytes)",
         f"- **{len(dead)}** DEAD (source unreachable — **abstained**, not judged)",
         "",
         "> A DEAD source is not evidence against the claim. The gate refuses to",
         "> score it. Missing evidence is not disproof; it is missing evidence.",
         "",
-        "## UNSUPPORTED — the source did not say this",
+        "## QUOTE_NOT_FOUND - the quote string was absent from what was fetched",
         "",
     ]
-    if unsupported:
+    if quote_not_found:
         ledger.append("| claim | url | http | reason |")
         ledger.append("|---|---|---|---|")
-        for v in unsupported:
+        for v in quote_not_found:
             ledger.append(
                 f"| {v['claim'][:90]} | {v['source_url']} | {v['http_status']} | {v['detail']} |"
             )
     else:
         ledger.append("_none_")
 
-    ledger += ["", "## DEAD — abstained, source unreachable", ""]
+    ledger += ["", "## DEAD - abstained, source unreachable", ""]
     if dead:
         ledger.append("| claim | url | http | failure |")
         ledger.append("|---|---|---|---|")
@@ -94,7 +94,7 @@ def main() -> int:
         fh.write("\n".join(ledger) + "\n")
 
     print(f"wrote {OUT}/post.md ({len(verified)} claims) and {OUT}/kill-ledger.md "
-          f"({len(unsupported)} unsupported, {len(dead)} dead)")
+          f"({len(quote_not_found)} quote-not-found, {len(dead)} dead)")
     return 0
 
 
