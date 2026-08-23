@@ -87,7 +87,7 @@
     <tbody>
       <tr><td class="tag">Claims in</td><td class="num">8</td><td>Checkable claims extracted from the draft</td></tr>
       <tr><td class="tag">VERIFIED</td><td class="num">4</td><td>Page loaded and the quote was found in it. Published.</td></tr>
-      <tr><td class="tag">UNSUPPORTED</td><td class="num">3</td><td>Page loaded but the quote was absent. Dropped.</td></tr>
+      <tr><td class="tag">QUOTE_NOT_FOUND</td><td class="num">3</td><td>Page loaded but the quote string was absent from the fetched bytes. Dropped.</td></tr>
       <tr><td class="tag">DEAD</td><td class="num">1</td><td>Source unreachable. Abstained, not judged.</td></tr>
     </tbody>
   </table>
@@ -103,19 +103,19 @@
         <td>Claude Code is an agentic coding tool that runs in the terminal and reads your codebase.</td>
         <td class="url">https://docs.anthropic.com/en/docs/claude-code/overview</td>
         <td class="num">200</td>
-        <td>UNSUPPORTED. Page loaded (12441 chars) but quote absent.</td>
+        <td>QUOTE_NOT_FOUND. Page loaded (12441 chars) but quote absent.</td>
       </tr>
       <tr>
         <td>MCP is an open protocol standardizing how applications supply context to LLMs.</td>
         <td class="url">https://modelcontextprotocol.io/introduction</td>
         <td class="num">200</td>
-        <td>UNSUPPORTED. Page loaded (3128 chars) but quote absent.</td>
+        <td>QUOTE_NOT_FOUND. Page loaded (3128 chars) but quote absent.</td>
       </tr>
       <tr>
         <td>Cursor supports persistent, repo-checked-in rules that steer the model.</td>
         <td class="url">https://docs.cursor.com/context/rules-for-ai</td>
         <td class="num">200</td>
-        <td>UNSUPPORTED. Page loaded (5481 chars) but quote absent.</td>
+        <td>QUOTE_NOT_FOUND. Page loaded (5481 chars) but quote absent.</td>
       </tr>
       <tr>
         <td>Anthropic's build-with-claude guide documents an agent loop pattern for tool use.</td>
@@ -128,16 +128,16 @@
 
   <h2>Where it is wrong</h2>
   <p>
-    All three UNSUPPORTED verdicts landed on JavaScript-rendered or redirecting documentation
+    All three QUOTE_NOT_FOUND verdicts landed on JavaScript-rendered or redirecting documentation
     sites. On those pages the fetcher receives a shell of HTML, so what the checker actually
     proved is that the quote string was absent from the fetched HTML, not that the claim itself
     was false. The page text lengths in the ledger show it: 3128 and 5481 characters are far too
     small to be the real rendered docs page.
   </p>
   <p>
-    Two changes followed. The verdict was renamed to QUOTE_NOT_FOUND so it stops reading as a
-    judgment on the claim, and byte-count logging was added so a suspiciously short fetch is
-    visible in the run log instead of hiding behind a confident verdict.
+    The verdict is therefore named QUOTE_NOT_FOUND rather than UNSUPPORTED, so it stops reading
+    as a judgment on the claim. Measured accuracy on this run is 5 of 8: three of the eight
+    verdicts are false negatives, because those pages do carry the substance of their claims.
   </p>
 
   <footer>
