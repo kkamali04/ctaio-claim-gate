@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>claim-gate</title>
+<style>
+  :root {
+    --ink: #1a1a1a;
+    --muted: #5c5c5c;
+    --line: #e0e0e0;
+    --bg: #ffffff;
+    --panel: #f7f7f5;
+    --accent: #2b5f4a;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 48px 20px 80px;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+  main { max-width: 780px; margin: 0 auto; }
+  h1 { font-size: 34px; line-height: 1.2; margin: 0 0 8px; letter-spacing: -0.02em; }
+  h2 { font-size: 20px; margin: 44px 0 12px; letter-spacing: -0.01em; }
+  .lede { font-size: 18px; color: var(--muted); margin: 0 0 40px; }
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 20px 0 8px; }
+  .step {
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 14px 16px;
+    background: var(--panel);
+  }
+  .step .name { font-weight: 600; font-size: 15px; letter-spacing: 0.04em; }
+  .step .kind { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 2px; }
+  .step p { margin: 8px 0 0; font-size: 14px; color: var(--muted); line-height: 1.5; }
+  table { border-collapse: collapse; width: 100%; margin: 16px 0; font-size: 14px; }
+  th, td { text-align: left; padding: 9px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { font-size: 12px; text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted); font-weight: 600; }
+  td.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+  code, .url { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 13px; word-break: break-all; }
+  .tag { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 12px; letter-spacing: 0.04em; }
+  a { color: var(--accent); }
+  p { margin: 12px 0; }
+  footer { margin-top: 56px; padding-top: 20px; border-top: 1px solid var(--line); font-size: 14px; color: var(--muted); }
+  @media (max-width: 620px) {
+    .steps { grid-template-columns: 1fr; }
+    body { padding: 28px 16px 60px; }
+    h1 { font-size: 28px; }
+  }
+</style>
+</head>
+<body>
+<main>
+
+  <h1>claim-gate</h1>
+  <p class="lede">A publish gate that only ships claims whose cited source actually says them.</p>
+
+  <h2>How it works</h2>
+  <div class="steps">
+    <div class="step">
+      <div class="name">EXTRACT</div>
+      <div class="kind">model</div>
+      <p>Draft prose goes to the model, which returns claim, quote, and source URL as JSON.</p>
+    </div>
+    <div class="step">
+      <div class="name">VERIFY</div>
+      <div class="kind">code</div>
+      <p>Each source URL is fetched, stripped to text, and searched for the quoted string. No model involved.</p>
+    </div>
+    <div class="step">
+      <div class="name">PUBLISH</div>
+      <div class="kind">code</div>
+      <p>Verified claims go to the post. Everything else goes to the kill ledger with its reason.</p>
+    </div>
+  </div>
+
+  <h2>Results</h2>
+  <p>From the recorded run of 2026-08-23, taken from <code>out/run.log</code>.</p>
+  <table>
+    <thead>
+      <tr><th>Outcome</th><th>Count</th><th>What it means</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="tag">Claims in</td><td class="num">8</td><td>Checkable claims extracted from the draft</td></tr>
+      <tr><td class="tag">VERIFIED</td><td class="num">4</td><td>Page loaded and the quote was found in it. Published.</td></tr>
+      <tr><td class="tag">UNSUPPORTED</td><td class="num">3</td><td>Page loaded but the quote was absent. Dropped.</td></tr>
+      <tr><td class="tag">DEAD</td><td class="num">1</td><td>Source unreachable. Abstained, not judged.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Kill ledger</h2>
+  <p>Every claim that did not reach the published post, and why.</p>
+  <table>
+    <thead>
+      <tr><th>Claim</th><th>URL</th><th>HTTP</th><th>Reason</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Claude Code is an agentic coding tool that runs in the terminal and reads your codebase.</td>
+        <td class="url">https://docs.anthropic.com/en/docs/claude-code/overview</td>
+        <td class="num">200</td>
+        <td>UNSUPPORTED. Page loaded (12441 chars) but quote absent.</td>
+      </tr>
+      <tr>
+        <td>MCP is an open protocol standardizing how applications supply context to LLMs.</td>
+        <td class="url">https://modelcontextprotocol.io/introduction</td>
+        <td class="num">200</td>
+        <td>UNSUPPORTED. Page loaded (3128 chars) but quote absent.</td>
+      </tr>
+      <tr>
+        <td>Cursor supports persistent, repo-checked-in rules that steer the model.</td>
+        <td class="url">https://docs.cursor.com/context/rules-for-ai</td>
+        <td class="num">200</td>
+        <td>UNSUPPORTED. Page loaded (5481 chars) but quote absent.</td>
+      </tr>
+      <tr>
+        <td>Anthropic's build-with-claude guide documents an agent loop pattern for tool use.</td>
+        <td class="url">https://docs.anthropic.com/en/docs/build-with-claude/agents</td>
+        <td class="num">404</td>
+        <td>DEAD. Source unreachable, so the gate abstained rather than scoring the claim false.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>Where it is wrong</h2>
+  <p>
+    All three UNSUPPORTED verdicts landed on JavaScript-rendered or redirecting documentation
+    sites. On those pages the fetcher receives a shell of HTML, so what the checker actually
+    proved is that the quote string was absent from the fetched HTML, not that the claim itself
+    was false. The page text lengths in the ledger show it: 3128 and 5481 characters are far too
+    small to be the real rendered docs page.
+  </p>
+  <p>
+    Two changes followed. The verdict was renamed to QUOTE_NOT_FOUND so it stops reading as a
+    judgment on the claim, and byte-count logging was added so a suspiciously short fetch is
+    visible in the run log instead of hiding behind a confident verdict.
+  </p>
+
+  <footer>
+    Source and full run artifacts:
+    <a href="https://github.com/kkamali04/ctaio-claim-gate">github.com/kkamali04/ctaio-claim-gate</a>
+  </footer>
+
+</main>
+</body>
+</html>
